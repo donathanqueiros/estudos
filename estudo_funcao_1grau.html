@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estudo Interativo: Função do 1º Grau</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 400px;
+        max-height: 50vh;
+      }
+      .nav-link {
+        transition: all 0.2s ease-in-out;
+      }
+      .nav-link.active {
+        color: #0891b2;
+        border-bottom-color: #0891b2;
+      }
+      .nav-link:not(.active) {
+        border-bottom-color: transparent;
+      }
+      .feedback {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        margin-top: 0.75rem;
+      }
+      .feedback-correct {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .feedback-incorrect {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #0891b2;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+      .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #0891b2;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <header class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-slate-900">
+          Plano de Estudo Interativo
+        </h1>
+        <p class="mt-2 text-xl text-slate-600">
+          Função do 1º Grau (Função Afim)
+        </p>
+      </header>
+
+      <nav class="flex justify-center border-b border-slate-200 mb-12">
+        <button
+          data-target="explorador"
+          class="nav-link active text-lg font-medium py-3 px-6 border-b-2"
+        >
+          Explorador
+        </button>
+        <button
+          data-target="aplicacao"
+          class="nav-link text-lg font-medium py-3 px-6 border-b-2"
+        >
+          Aplicação Prática
+        </button>
+        <button
+          data-target="raiz"
+          class="nav-link text-lg font-medium py-3 px-6 border-b-2"
+        >
+          Calculadora de Raiz
+        </button>
+        <button
+          data-target="pratica"
+          class="nav-link text-lg font-medium py-3 px-6 border-b-2"
+        >
+          Pratique
+        </button>
+      </nav>
+
+      <main>
+        <section id="explorador" class="content-section">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-cyan-700">
+              Explorador Interativo da Função
+            </h2>
+            <p class="mt-2 text-lg text-slate-600">
+              Use os controles deslizantes para alterar os coeficientes 'a' e
+              'b' e veja como a reta se comporta no gráfico.
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div
+              class="bg-white p-6 rounded-lg shadow-md border border-slate-200"
+            >
+              <div class="mb-6">
+                <label
+                  for="sliderA"
+                  class="block font-medium text-slate-700 mb-1"
+                  >Coeficiente Angular (a):
+                  <span id="valueA" class="font-bold text-cyan-600"
+                    >1</span
+                  ></label
+                >
+                <input
+                  id="sliderA"
+                  type="range"
+                  min="-10"
+                  max="10"
+                  value="1"
+                  step="0.5"
+                  class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+              </div>
+              <div>
+                <label
+                  for="sliderB"
+                  class="block font-medium text-slate-700 mb-1"
+                  >Coeficiente Linear (b):
+                  <span id="valueB" class="font-bold text-cyan-600"
+                    >2</span
+                  ></label
+                >
+                <input
+                  id="sliderB"
+                  type="range"
+                  min="-10"
+                  max="10"
+                  value="2"
+                  step="1"
+                  class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+              </div>
+              <div class="mt-8 p-4 bg-slate-100 rounded-lg">
+                <p class="text-lg font-mono text-center mb-3">
+                  f(x) = <span id="funcEquation">1x + 2</span>
+                </p>
+                <div id="funcDescription" class="text-center text-slate-700">
+                  <p>
+                    A função é
+                    <strong class="text-green-600">CRESCENTE</strong>.
+                  </p>
+                  <p>
+                    A reta corta o eixo y no ponto
+                    <strong class="text-blue-600">(0, 2)</strong>.
+                  </p>
+                  <p>
+                    A raiz da função (onde corta o eixo x) é
+                    <strong class="text-red-600">x = -2.00</strong>.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white p-4 rounded-lg shadow-md border border-slate-200"
+            >
+              <div class="chart-container">
+                <canvas id="interactiveChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="aplicacao" class="content-section hidden">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-cyan-700">
+              Aplicação Prática: Corrida de Táxi
+            </h2>
+            <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">
+              Uma empresa de táxi cobra uma "bandeirada" fixa de R$ 4,00 e mais
+              R$ 2,50 por quilômetro rodado. Isso pode ser representado pela
+              função <strong class="font-mono">f(x) = 2.5x + 4</strong>. Calcule
+              o custo para diferentes distâncias.
+            </p>
+          </div>
+          <div
+            class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md border border-slate-200"
+          >
+            <div class="flex items-center gap-4">
+              <input
+                type="number"
+                id="taxiDistancia"
+                placeholder="Distância em km"
+                class="flex-grow w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+              />
+              <button
+                id="taxiCalcular"
+                class="bg-cyan-600 text-white font-bold py-2 px-6 rounded-md hover:bg-cyan-700 transition-colors"
+              >
+                Calcular
+              </button>
+            </div>
+            <div
+              id="taxiResultado"
+              class="mt-6 text-center text-2xl font-bold text-slate-700 h-10"
+            ></div>
+          </div>
+        </section>
+
+        <section id="raiz" class="content-section hidden">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-cyan-700">
+              Calculadora de Raiz da Função
+            </h2>
+            <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">
+              A raiz (ou zero) da função é o valor de 'x' que faz com que f(x)
+              seja igual a 0. É o ponto onde a reta cruza o eixo x. Use a
+              fórmula <strong class="font-mono">x = -b / a</strong>. Insira os
+              coeficientes para encontrar a raiz.
+            </p>
+          </div>
+          <div
+            class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md border border-slate-200"
+          >
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="raizA" class="block font-medium text-slate-700 mb-1"
+                  >Coeficiente 'a'</label
+                >
+                <input
+                  type="number"
+                  id="raizA"
+                  placeholder="Ex: 2"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+                />
+              </div>
+              <div>
+                <label for="raizB" class="block font-medium text-slate-700 mb-1"
+                  >Coeficiente 'b'</label
+                >
+                <input
+                  type="number"
+                  id="raizB"
+                  placeholder="Ex: -10"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+                />
+              </div>
+            </div>
+            <button
+              id="raizCalcular"
+              class="w-full mt-6 bg-cyan-600 text-white font-bold py-2 px-6 rounded-md hover:bg-cyan-700 transition-colors"
+            >
+              Calcular Raiz
+            </button>
+            <div
+              id="raizResultado"
+              class="mt-6 text-center text-2xl font-bold text-slate-700 h-10"
+            ></div>
+          </div>
+        </section>
+
+        <section id="pratica" class="content-section hidden">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-cyan-700">
+              Pratique Seus Conhecimentos
+            </h2>
+            <p class="mt-2 text-lg text-slate-600">
+              Resolva os exercícios abaixo e verifique suas respostas.
+            </p>
+          </div>
+          <div class="space-y-10 max-w-4xl mx-auto">
+            <div
+              class="bg-white p-6 rounded-lg shadow-md border border-slate-200"
+            >
+              <p class="font-medium text-lg mb-4">
+                Exercício 1: Identifique os coeficientes e a classificação da
+                função <strong class="font-mono">f(x) = 10 - 2x</strong>.
+              </p>
+              <div class="grid sm:grid-cols-3 gap-4 items-end">
+                <div>
+                  <label
+                    for="ex1a"
+                    class="block text-sm font-medium text-slate-600"
+                    >Coeficiente 'a'</label
+                  >
+                  <input
+                    type="number"
+                    id="ex1a"
+                    class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="ex1b"
+                    class="block text-sm font-medium text-slate-600"
+                    >Coeficiente 'b'</label
+                  >
+                  <input
+                    type="number"
+                    id="ex1b"
+                    class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="ex1class"
+                    class="block text-sm font-medium text-slate-600"
+                    >Classificação</label
+                  >
+                  <select
+                    id="ex1class"
+                    class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-md"
+                  >
+                    <option value="">Selecione...</option>
+                    <option value="crescente">Crescente</option>
+                    <option value="decrescente">Decrescente</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                data-ex="1"
+                class="verify-btn mt-4 bg-slate-600 text-white font-bold py-2 px-5 rounded-md hover:bg-slate-700 transition-colors"
+              >
+                Verificar
+              </button>
+              <div id="feedback-ex1" class="feedback"></div>
+            </div>
+
+            <div
+              class="bg-white p-6 rounded-lg shadow-md border border-slate-200"
+            >
+              <p class="font-medium text-lg mb-4">
+                Exercício 2: Para a função
+                <strong class="font-mono">f(x) = -4x + 20</strong>, calcule o
+                valor de f(5).
+              </p>
+              <div class="flex items-end gap-4">
+                <div class="flex-grow">
+                  <label
+                    for="ex2"
+                    class="block text-sm font-medium text-slate-600"
+                    >f(5) = ?</label
+                  >
+                  <input
+                    type="number"
+                    id="ex2"
+                    class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-md"
+                  />
+                </div>
+                <button
+                  data-ex="2"
+                  class="verify-btn bg-slate-600 text-white font-bold py-2 px-5 rounded-md hover:bg-slate-700 transition-colors"
+                >
+                  Verificar
+                </button>
+              </div>
+              <div id="feedback-ex2" class="feedback"></div>
+            </div>
+
+            <div
+              class="bg-white p-6 rounded-lg shadow-md border border-slate-200"
+            >
+              <p class="font-medium text-lg mb-4">
+                Exercício 3: Um técnico cobra R$ 50,00 pela visita e R$ 30,00
+                por hora. A função é
+                <strong class="font-mono">C(h) = 30h + 50</strong>. Qual o custo
+                para 3.5 horas?
+              </p>
+              <div class="flex items-end gap-4">
+                <div class="flex-grow">
+                  <label
+                    for="ex3"
+                    class="block text-sm font-medium text-slate-600"
+                    >Custo Total (R$)</label
+                  >
+                  <input
+                    type="number"
+                    id="ex3"
+                    placeholder="Ex: 155.00"
+                    class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-md"
+                  />
+                </div>
+                <button
+                  data-ex="3"
+                  class="verify-btn bg-slate-600 text-white font-bold py-2 px-5 rounded-md hover:bg-slate-700 transition-colors"
+                >
+                  Verificar
+                </button>
+              </div>
+              <div id="feedback-ex3" class="feedback"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const contentSections = document.querySelectorAll(".content-section");
+        const verifyButtons = document.querySelectorAll(".verify-btn");
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            navLinks.forEach((l) => l.classList.remove("active"));
+            link.classList.add("active");
+
+            const targetId = link.getAttribute("data-target");
+            contentSections.forEach((section) => {
+              if (section.id === targetId) {
+                section.classList.remove("hidden");
+              } else {
+                section.classList.add("hidden");
+              }
+            });
+          });
+        });
+
+        const ctx = document
+          .getElementById("interactiveChart")
+          .getContext("2d");
+        const interactiveChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "f(x)",
+                data: [],
+                borderColor: "#0891b2",
+                borderWidth: 2,
+                fill: false,
+                tension: 0.1,
+                pointRadius: 0,
+              },
+              {
+                label: "Raiz",
+                data: [],
+                backgroundColor: "#ef4444",
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                type: "bubble",
+              },
+              {
+                label: "Intercepto Y",
+                data: [],
+                backgroundColor: "#3b82f6",
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                type: "bubble",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                type: "linear",
+                position: "bottom",
+                title: { display: true, text: "x" },
+              },
+              y: {
+                title: { display: true, text: "f(x)" },
+              },
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    if (context.dataset.label === "Raiz")
+                      return `Raiz: (${context.parsed.x.toFixed(2)}, 0)`;
+                    if (context.dataset.label === "Intercepto Y")
+                      return `Intercepto Y: (0, ${context.parsed.y.toFixed(
+                        2
+                      )})`;
+                    return `(${context.parsed.x.toFixed(
+                      2
+                    )}, ${context.parsed.y.toFixed(2)})`;
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const sliderA = document.getElementById("sliderA");
+        const sliderB = document.getElementById("sliderB");
+        const valueA = document.getElementById("valueA");
+        const valueB = document.getElementById("valueB");
+        const funcEquation = document.getElementById("funcEquation");
+        const funcDescription = document.getElementById("funcDescription");
+
+        function updateInteractiveChart() {
+          const a = parseFloat(sliderA.value);
+          const b = parseFloat(sliderB.value);
+
+          valueA.textContent = a;
+          valueB.textContent = b;
+          funcEquation.innerHTML = `${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}`;
+
+          const data = [];
+          const labels = [];
+          for (let x = -10; x <= 10; x++) {
+            labels.push(x);
+            data.push(a * x + b);
+          }
+
+          interactiveChart.data.labels = labels;
+          interactiveChart.data.datasets[0].data = data;
+
+          let raiz = 0;
+          if (a !== 0) {
+            raiz = -b / a;
+            interactiveChart.data.datasets[1].data = [{ x: raiz, y: 0 }];
+          } else {
+            interactiveChart.data.datasets[1].data = [];
+          }
+
+          interactiveChart.data.datasets[2].data = [{ x: 0, y: b }];
+          interactiveChart.update();
+
+          let descriptionHTML = "";
+          if (a > 0)
+            descriptionHTML +=
+              '<p>A função é <strong class="text-green-600">CRESCENTE</strong>.</p>';
+          else if (a < 0)
+            descriptionHTML +=
+              '<p>A função é <strong class="text-red-600">DECRESCENTE</strong>.</p>';
+          else
+            descriptionHTML +=
+              '<p>A função é <strong class="text-gray-600">CONSTANTE</strong>.</p>';
+
+          descriptionHTML += `<p>A reta corta o eixo y no ponto <strong class="text-blue-600">(0, ${b})</strong>.</p>`;
+          if (a !== 0) {
+            descriptionHTML += `<p>A raiz da função (onde corta o eixo x) é <strong class="text-red-600">x = ${raiz.toFixed(
+              2
+            )}</strong>.</p>`;
+          } else {
+            descriptionHTML += `<p>A função não possui raiz (não corta o eixo x).</p>`;
+          }
+
+          funcDescription.innerHTML = descriptionHTML;
+        }
+
+        sliderA.addEventListener("input", updateInteractiveChart);
+        sliderB.addEventListener("input", updateInteractiveChart);
+
+        const taxiDistancia = document.getElementById("taxiDistancia");
+        const taxiCalcular = document.getElementById("taxiCalcular");
+        const taxiResultado = document.getElementById("taxiResultado");
+
+        taxiCalcular.addEventListener("click", () => {
+          const dist = parseFloat(taxiDistancia.value);
+          if (!isNaN(dist) && dist >= 0) {
+            const cost = 2.5 * dist + 4;
+            taxiResultado.textContent = `Custo total: R$ ${cost.toFixed(2)}`;
+          } else {
+            taxiResultado.textContent =
+              "Por favor, insira uma distância válida.";
+          }
+        });
+
+        const raizA = document.getElementById("raizA");
+        const raizB = document.getElementById("raizB");
+        const raizCalcular = document.getElementById("raizCalcular");
+        const raizResultado = document.getElementById("raizResultado");
+
+        raizCalcular.addEventListener("click", () => {
+          const a = parseFloat(raizA.value);
+          const b = parseFloat(raizB.value);
+
+          if (isNaN(a) || isNaN(b)) {
+            raizResultado.textContent = "Insira valores para a e b.";
+            return;
+          }
+          if (a === 0) {
+            raizResultado.textContent = "'a' não pode ser zero.";
+            return;
+          }
+
+          const raiz = -b / a;
+          raizResultado.textContent = `A raiz é x = ${raiz.toFixed(2)}`;
+        });
+
+        const answers = {
+          ex1: { a: -2, b: 10, class: "decrescente" },
+          ex2: 0,
+          ex3: 155,
+        };
+
+        verifyButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const exNum = btn.dataset.ex;
+            const feedbackEl = document.getElementById(`feedback-ex${exNum}`);
+            let isCorrect = false;
+
+            if (exNum === "1") {
+              const a = parseFloat(document.getElementById("ex1a").value);
+              const b = parseFloat(document.getElementById("ex1b").value);
+              const classification = document.getElementById("ex1class").value;
+              if (
+                a === answers.ex1.a &&
+                b === answers.ex1.b &&
+                classification === answers.ex1.class
+              ) {
+                isCorrect = true;
+              }
+            } else {
+              const userAnswer = parseFloat(
+                document.getElementById(`ex${exNum}`).value
+              );
+              if (userAnswer === answers[`ex${exNum}`]) {
+                isCorrect = true;
+              }
+            }
+
+            feedbackEl.textContent = "";
+            feedbackEl.classList.remove(
+              "feedback-correct",
+              "feedback-incorrect"
+            );
+            if (isCorrect) {
+              feedbackEl.textContent = "Correto! Muito bem!";
+              feedbackEl.classList.add("feedback-correct");
+            } else {
+              feedbackEl.textContent = "Incorreto. Tente novamente!";
+              feedbackEl.classList.add("feedback-incorrect");
+            }
+          });
+        });
+
+        updateInteractiveChart();
+      });
+    </script>
+  </body>
+</html>
