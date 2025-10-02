@@ -162,7 +162,7 @@
               </div>
               <div class="mt-8 p-4 bg-slate-100 rounded-lg">
                 <p class="text-lg font-mono text-center mb-3">
-                  f(x) = <span id="funcEquation">1x + 2</span>
+                  f(x) = <span id="funcEquation">ax + b</span>
                 </p>
                 <div id="funcDescription" class="text-center text-slate-700">
                   <p>
@@ -511,13 +511,37 @@
         const funcEquation = document.getElementById("funcEquation");
         const funcDescription = document.getElementById("funcDescription");
 
+        function formatLinearFunction(a, b) {
+          const pieces = [];
+          if (a !== 0) {
+            if (a === 1) {
+              pieces.push("x");
+            } else if (a === -1) {
+              pieces.push("-x");
+            } else {
+              pieces.push(`${a}x`);
+            }
+          }
+          if (b !== 0) {
+            if (pieces.length) {
+              pieces.push(b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`);
+            } else {
+              pieces.push(`${b}`);
+            }
+          }
+          if (!pieces.length) {
+            return "0";
+          }
+          return pieces.join("");
+        }
+
         function updateInteractiveChart() {
           const a = parseFloat(sliderA.value);
           const b = parseFloat(sliderB.value);
 
           valueA.textContent = a;
           valueB.textContent = b;
-          funcEquation.innerHTML = `${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}`;
+          funcEquation.innerHTML = formatLinearFunction(a, b);
 
           const data = [];
           const labels = [];
@@ -562,7 +586,6 @@
 
           funcDescription.innerHTML = descriptionHTML;
         }
-
         sliderA.addEventListener("input", updateInteractiveChart);
         sliderB.addEventListener("input", updateInteractiveChart);
 

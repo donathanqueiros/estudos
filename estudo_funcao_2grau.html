@@ -181,7 +181,7 @@
               </div>
               <div class="mt-6 p-4 bg-slate-100 rounded-lg">
                 <p class="text-lg font-mono text-center mb-3" id="funcEquation">
-                  f(x) = 1x² - 6x + 8
+                  f(x) = ax<sup>2</sup> + bx + c
                 </p>
                 <div
                   id="funcDescription"
@@ -567,22 +567,59 @@
         const funcEquation = document.getElementById("funcEquation");
         const funcDescription = document.getElementById("funcDescription");
 
+        function formatQuadraticFunction(a, b, c) {
+          const terms = [];
+
+          if (a !== 0) {
+            if (a === 1) {
+              terms.push("x<sup>2</sup>");
+            } else if (a === -1) {
+              terms.push("-x<sup>2</sup>");
+            } else {
+              terms.push(`${a}x<sup>2</sup>`);
+            }
+          }
+
+          if (b !== 0) {
+            const magnitude = Math.abs(b);
+            const base = magnitude === 1 ? "x" : `${magnitude}x`;
+            if (terms.length) {
+              terms.push(b > 0 ? ` + ${base}` : ` - ${base}`);
+            } else {
+              terms.push(b > 0 ? base : `-${base}`);
+            }
+          }
+
+          if (c !== 0) {
+            if (terms.length) {
+              terms.push(c > 0 ? ` + ${c}` : ` - ${Math.abs(c)}`);
+            } else {
+              terms.push(`${c}`);
+            }
+          }
+
+          if (!terms.length) {
+            return "0";
+          }
+
+          return terms.join("");
+        }
+
         function updateInteractiveChart() {
-          const a = parseFloat(sliderA.value);
+          let a = parseFloat(sliderA.value);
           const b = parseFloat(sliderB.value);
           const c = parseFloat(sliderC.value);
 
-          if (a === 0) sliderA.value = 0.5;
+          if (a === 0) {
+            sliderA.value = 0.5;
+            a = 0.5;
+          }
 
           valueA.textContent = a;
           valueB.textContent = b;
           valueC.textContent = c;
 
-          let bSign = b < 0 ? "-" : "+";
-          let cSign = c < 0 ? "-" : "+";
-          funcEquation.innerHTML = `f(x) = ${a}x² ${bSign} ${Math.abs(
-            b
-          )}x ${cSign} ${Math.abs(c)}`;
+          funcEquation.innerHTML = formatQuadraticFunction(a, b, c);
 
           const data = [];
           const labels = [];
@@ -605,7 +642,7 @@
           descriptionHTML += `<p>Concavidade: <strong class="${
             a > 0 ? "text-green-600" : "text-red-600"
           }">${a > 0 ? "Para Cima" : "Para Baixo"}</strong></p>`;
-          descriptionHTML += `<p>Valor de Delta (Δ): <strong class="text-blue-600">${delta.toFixed(
+          descriptionHTML += `<p>Valor de &Delta;: <strong class="text-blue-600">${delta.toFixed(
             2
           )}</strong></p>`;
 
@@ -614,9 +651,9 @@
             const x1 = (-b + Math.sqrt(delta)) / (2 * a);
             const x2 = (-b - Math.sqrt(delta)) / (2 * a);
             rootPoints.push({ x: x1, y: 0 }, { x: x2, y: 0 });
-            descriptionHTML += `<p>Raízes: <strong class="text-red-600">x'=${x1.toFixed(
+            descriptionHTML += `<p>Raízes: <strong class="text-red-600">x' = ${x1.toFixed(
               2
-            )}, x''=${x2.toFixed(2)}</strong></p>`;
+            )}, x'' = ${x2.toFixed(2)}</strong></p>`;
           } else if (delta === 0) {
             const x1 = -b / (2 * a);
             rootPoints.push({ x: x1, y: 0 });
@@ -660,7 +697,7 @@
 
           const delta = b * b - 4 * a * c;
           let resultHTML = `
-                <p><strong>1. Discriminante (Δ):</strong> ${delta.toFixed(
+                <p><strong>1. Discriminante (&Delta;):</strong> ${delta.toFixed(
                   2
                 )}</p>
             `;
